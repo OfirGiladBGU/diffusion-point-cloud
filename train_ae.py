@@ -12,6 +12,12 @@ from utils.transform import *
 from models.autoencoder import *
 from evaluation import EMD_CD
 
+# Allow loading checkpoints that stored argparse.Namespace in the state dict
+try:
+    torch.serialization.add_safe_globals([argparse.Namespace])
+except AttributeError:
+    pass
+
 
 # Arguments
 parser = argparse.ArgumentParser()

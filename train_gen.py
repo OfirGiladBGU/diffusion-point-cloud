@@ -15,6 +15,12 @@ from models.vae_flow import *
 from models.flow import add_spectral_norm, spectral_norm_power_iteration
 from evaluation import *
 
+# Allow loading checkpoints that stored argparse.Namespace in the state dict
+try:
+    torch.serialization.add_safe_globals([argparse.Namespace])
+except AttributeError:
+    pass
+
 
 # Arguments
 parser = argparse.ArgumentParser()

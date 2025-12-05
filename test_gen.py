@@ -13,6 +13,13 @@ from models.vae_flow import *
 from models.flow import add_spectral_norm, spectral_norm_power_iteration
 from evaluation import *
 
+# Allow loading checkpoints that stored argparse.Namespace in the state dict
+try:
+    torch.serialization.add_safe_globals([argparse.Namespace])
+except AttributeError:
+    pass
+
+
 def normalize_point_clouds(pcs, mode, logger):
     if mode is None:
         logger.info('Will not normalize point clouds.')
@@ -58,7 +65,7 @@ for k, v in vars(args).items():
     logger.info('[ARGS::%s] %s' % (k, repr(v)))
 
 # Checkpoint
-ckpt = torch.load(args.ckpt)
+ckpt = torch.load(args.ckpt, map_location=args.device)
 seed_all(args.seed)
 
 # Datasets and loaders
