@@ -10,6 +10,12 @@ from utils.data import *
 from models.autoencoder import *
 from evaluation import EMD_CD
 
+# Allow loading checkpoints that stored argparse.Namespace in the state dict
+try:
+    torch.serialization.add_safe_globals([argparse.Namespace])
+except AttributeError:
+    pass
+
 
 # Arguments
 parser = argparse.ArgumentParser()
@@ -31,7 +37,7 @@ for k, v in vars(args).items():
     logger.info('[ARGS::%s] %s' % (k, repr(v)))
 
 # Checkpoint
-ckpt = torch.load(args.ckpt)
+ckpt = torch.load(args.ckpt, map_location=args.device)
 seed_all(ckpt['args'].seed)
 
 # Datasets and loaders
